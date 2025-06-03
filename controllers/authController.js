@@ -2,7 +2,7 @@
 exports.loginSuccess = (req, res) => {
     res.json({ message: 'Login successful', user: req.user });
   };
-  
+
   exports.loginFailure = (req, res) => {
     res.status(401).json({ error: 'Login failed' });
   };
