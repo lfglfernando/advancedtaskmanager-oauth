@@ -3,16 +3,15 @@ const router = express.Router();
 const passport = require('passport');
 
 router.get(
-    '/google',
-    passport.authenticate('google', {
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
-      ]
-    })
-  );
-  
-
+  '/google',
+  passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ],
+    prompt: 'consent' 
+  })
+);
 
 router.get(
   '/google/callback',
@@ -26,10 +25,7 @@ router.get(
     session: true
   }),
   (req, res) => {
-    res.json({
-      message: 'Login successful',
-      user: req.user
-    });
+    res.redirect('/api-docs');
   }
 );
 
@@ -37,10 +33,14 @@ router.get('/failure', (req, res) => {
   res.status(401).json({ message: 'Google authentication failed' });
 });
 
+
 router.get('/logout', (req, res) => {
   req.logout(err => {
     if (err) return res.status(500).json({ message: 'Logout error', error: err });
-    res.json({ message: 'Logged out' });
+    req.session.destroy(() => {
+      res.clearCookie('connect.sid');
+      res.json({ message: 'Logged out' });
+    });
   });
 });
 

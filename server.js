@@ -13,7 +13,14 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 1); 
+
+app.use((req, res, next) => {
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    return next();
+  }
+  res.redirect('https://' + req.headers.host + req.url);
+});
 
 app.use(cors());
 app.use(express.json());
@@ -29,7 +36,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000 // 1 día
+      maxAge: 24 * 60 * 60 * 1000, 
+      secure: true, // 
+      sameSite: 'none' // 
     }
   })
 );
