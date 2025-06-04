@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-
 router.get(
   '/google',
   passport.authenticate('google', {
@@ -10,9 +9,13 @@ router.get(
   })
 );
 
-
 router.get(
   '/google/callback',
+  (req, res, next) => {
+    console.log('REQ.originalUrl =', req.originalUrl);
+    console.log('REQ full URL   =', `${req.protocol}://${req.get('host')}${req.originalUrl}`);
+    next();
+  },
   passport.authenticate('google', {
     failureRedirect: '/auth/failure',
     session: true
@@ -28,7 +31,6 @@ router.get(
 router.get('/failure', (req, res) => {
   res.status(401).json({ message: 'Google authentication failed' });
 });
-
 
 router.get('/logout', (req, res) => {
   req.logout(err => {
