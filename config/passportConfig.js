@@ -1,4 +1,11 @@
 const passport = require('passport');
+// config/passportConfig.js (arriba, antes de crear la Strategy)
+console.log('ENV → GOOGLE_CLIENT_ID      =', process.env.GOOGLE_CLIENT_ID);
+console.log('ENV → GOOGLE_CLIENT_SECRET  =', process.env.GOOGLE_CLIENT_SECRET);
+console.log('ENV → GOOGLE_CALLBACK_URL   =', process.env.GOOGLE_CALLBACK_URL);
+console.log('ENV → SESSION_SECRET        =', process.env.SESSION_SECRET);
+
+
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.serializeUser((user, done) => {
