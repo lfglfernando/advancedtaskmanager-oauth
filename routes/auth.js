@@ -1,43 +1,38 @@
-
 const express = require('express');
-const passport = require('passport');
 const router = express.Router();
+const passport = require('passport');
+
 
 router.get(
   '/google',
   passport.authenticate('google', {
-    scope: ['profile', 'email'], 
-    prompt: 'select_account',      
-    accessType: 'offline'      
+    scope: ['profile', 'email']
   })
 );
 
+
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/auth/failure' }),
+  passport.authenticate('google', {
+    failureRedirect: '/auth/failure',
+    session: true
+  }),
   (req, res) => {
-    res.redirect('/auth/success');
+    res.json({
+      message: 'Login successful',
+      user: req.user
+    });
   }
 );
 
-router.get('/success', (req, res) => {
-  res.json({ message: 'Login successful', user: req.user });
-});
-
 router.get('/failure', (req, res) => {
-  res.status(401).json({ message: 'Login failed' });
+  res.status(401).json({ message: 'Google authentication failed' });
 });
 
-router.get('/status', (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.json({ loggedIn: true, user: req.user });
-  }
-  res.json({ loggedIn: false });
-});
 
 router.get('/logout', (req, res) => {
-  req.logout(function (err) {
-    if (err) return res.status(500).json({ message: 'Logout error' });
+  req.logout(err => {
+    if (err) return res.status(500).json({ message: 'Logout error', error: err });
     res.json({ message: 'Logged out' });
   });
 });
