@@ -6,7 +6,8 @@ const authController = require('../controllers/authController');
 router.get(
   '/google',
   passport.authenticate('google', {
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
+    prompt: 'select_account' // fuerza a mostrar la selección de cuenta
   })
 );
 
@@ -22,7 +23,5 @@ router.get(
 router.get('/failure', (req, res) => {
   res.status(401).json({ message: 'Google authentication failed' });
 });
-
-router.get('/logout', authController.logout);
 
 module.exports = router;

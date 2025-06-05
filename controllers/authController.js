@@ -13,18 +13,9 @@ exports.googleCallback = (req, res) => {
   };
 
   const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
-    expiresIn: '24h'
+    expiresIn: '1d'
   });
 
-  res.json({
-    message: 'Google login successful',
-    token,
-    user: userPayload
-  });
-};
-
-exports.logout = (req, res) => {
-  req.logout(() => {
-    res.json({ message: 'Logged out' });
-  });
+  // ✅ Redirige a /api-docs con el token
+  res.redirect(`${process.env.BASE_URL}/api-docs?token=${token}`);
 };
