@@ -29,6 +29,10 @@ swaggerDocs(app);
 
 const port = process.env.PORT || 3000;
 connectToServer(() => {
+  app.get('/success', (req, res) => {
+        res.send(`Token recibido: ${req.query.token}`);
+    });
+      
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
