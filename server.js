@@ -13,7 +13,7 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-app.set('trust proxy', 1); 
+app.set('trust proxy', 1);
 
 app.use((req, res, next) => {
   if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
@@ -22,7 +22,12 @@ app.use((req, res, next) => {
   res.redirect('https://' + req.headers.host + req.url);
 });
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://advancedtaskmanager-oauth.onrender.com', // Cambia esto si usas Swagger UI desde otro dominio
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 if (!process.env.SESSION_SECRET) {
@@ -37,8 +42,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, 
-      secure: true, // 
-      sameSite: 'none' // 
+      secure: true,
+      sameSite: 'none'
     }
   })
 );

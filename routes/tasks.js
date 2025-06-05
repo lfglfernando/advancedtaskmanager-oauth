@@ -1,5 +1,3 @@
-// routes/tasks.js
-
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/taskController');
@@ -24,7 +22,7 @@ const ensureAuth = require('../middleware/ensureAuth');
  *       200:
  *         description: List of tasks
  *       401:
- *         description: Unauthorized (not logged in)
+ *         description: Unauthorized
  *       500:
  *         description: Server error
  */
@@ -51,11 +49,9 @@ router.get('/', ensureAuth, controller.getAllTasks);
  *       400:
  *         description: Invalid ID
  *       401:
- *         description: Unauthorized (not logged in)
+ *         description: Unauthorized
  *       404:
  *         description: Task not found
- *       500:
- *         description: Server error
  */
 router.get('/:id', ensureAuth, controller.getTaskById);
 
@@ -84,35 +80,26 @@ router.get('/:id', ensureAuth, controller.getTaskById);
  *             properties:
  *               title:
  *                 type: string
- *                 description: Title of the task
  *               description:
  *                 type: string
- *                 description: Detailed description of the task
  *               dueDate:
  *                 type: string
  *                 format: date-time
- *                 description: Due date in ISO 8601 format, e.g., "2025-06-10T00:00:00Z"
  *               priority:
  *                 type: string
- *                 description: Priority level (e.g., "High", "Medium", "Low")
  *               completed:
  *                 type: boolean
- *                 description: Completion status of the task
  *               categoryId:
  *                 type: string
- *                 description: ObjectId of the category this task belongs to
  *               userId:
  *                 type: string
- *                 description: Identifier of the user who owns the task
  *     responses:
  *       201:
- *         description: Task created successfully
+ *         description: Task created
  *       400:
- *         description: Missing or invalid fields
+ *         description: Validation error
  *       401:
- *         description: Unauthorized (not logged in)
- *       500:
- *         description: Server error
+ *         description: Unauthorized
  */
 router.post('/', ensureAuth, controller.createTask);
 
@@ -120,7 +107,7 @@ router.post('/', ensureAuth, controller.createTask);
  * @swagger
  * /api/tasks/{id}:
  *   put:
- *     summary: Update an existing task
+ *     summary: Update a task
  *     tags: [Tasks]
  *     security:
  *       - cookieAuth: []
@@ -130,7 +117,6 @@ router.post('/', ensureAuth, controller.createTask);
  *         required: true
  *         schema:
  *           type: string
- *         description: Task ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -148,37 +134,26 @@ router.post('/', ensureAuth, controller.createTask);
  *             properties:
  *               title:
  *                 type: string
- *                 description: Updated title of the task
  *               description:
  *                 type: string
- *                 description: Updated detailed description
  *               dueDate:
  *                 type: string
  *                 format: date-time
- *                 description: Updated due date in ISO format
  *               priority:
  *                 type: string
- *                 description: Updated priority level
  *               completed:
  *                 type: boolean
- *                 description: Updated completion status
  *               categoryId:
  *                 type: string
- *                 description: Updated category ObjectId
  *               userId:
  *                 type: string
- *                 description: Updated user identifier
  *     responses:
  *       200:
- *         description: Task updated successfully
+ *         description: Task updated
  *       400:
- *         description: Missing or invalid fields / Invalid ID
+ *         description: Invalid input or ID
  *       401:
- *         description: Unauthorized (not logged in)
- *       404:
- *         description: Task not found
- *       500:
- *         description: Server error
+ *         description: Unauthorized
  */
 router.put('/:id', ensureAuth, controller.updateTask);
 
@@ -186,7 +161,7 @@ router.put('/:id', ensureAuth, controller.updateTask);
  * @swagger
  * /api/tasks/{id}:
  *   delete:
- *     summary: Delete a task by ID
+ *     summary: Delete a task
  *     tags: [Tasks]
  *     security:
  *       - cookieAuth: []
@@ -196,18 +171,13 @@ router.put('/:id', ensureAuth, controller.updateTask);
  *         required: true
  *         schema:
  *           type: string
- *         description: Task ID to delete
  *     responses:
  *       200:
- *         description: Task deleted successfully
+ *         description: Task deleted
  *       400:
  *         description: Invalid ID
  *       401:
- *         description: Unauthorized (not logged in)
- *       404:
- *         description: Task not found
- *       500:
- *         description: Server error
+ *         description: Unauthorized
  */
 router.delete('/:id', ensureAuth, controller.deleteTask);
 

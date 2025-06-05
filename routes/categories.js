@@ -16,9 +16,13 @@ const ensureAuth = require('../middleware/ensureAuth');
  *   get:
  *     summary: Get all categories
  *     tags: [Categories]
+ *     security:
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: List of categories
+ *       401:
+ *         description: Unauthorized
  */
 router.get('/', ensureAuth, controller.getAllCategories);
 
@@ -28,15 +32,22 @@ router.get('/', ensureAuth, controller.getAllCategories);
  *   get:
  *     summary: Get a category by ID
  *     tags: [Categories]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         description: Category ID
  *     responses:
  *       200:
  *         description: Category found
+ *       400:
+ *         description: Invalid ID
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Not found
  */
@@ -48,6 +59,8 @@ router.get('/:id', ensureAuth, controller.getCategoryById);
  *   post:
  *     summary: Create a new category
  *     tags: [Categories]
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -64,6 +77,8 @@ router.get('/:id', ensureAuth, controller.getCategoryById);
  *         description: Category created
  *       400:
  *         description: Missing required fields
+ *       401:
+ *         description: Unauthorized
  */
 router.post('/', ensureAuth, controller.createCategory);
 
@@ -73,6 +88,8 @@ router.post('/', ensureAuth, controller.createCategory);
  *   put:
  *     summary: Update a category
  *     tags: [Categories]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -95,6 +112,8 @@ router.post('/', ensureAuth, controller.createCategory);
  *         description: Category updated
  *       400:
  *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
  */
 router.put('/:id', ensureAuth, controller.updateCategory);
 
@@ -104,6 +123,8 @@ router.put('/:id', ensureAuth, controller.updateCategory);
  *   delete:
  *     summary: Delete a category
  *     tags: [Categories]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -115,6 +136,8 @@ router.put('/:id', ensureAuth, controller.updateCategory);
  *         description: Category deleted
  *       400:
  *         description: Invalid ID
+ *       401:
+ *         description: Unauthorized
  */
 router.delete('/:id', ensureAuth, controller.deleteCategory);
 
