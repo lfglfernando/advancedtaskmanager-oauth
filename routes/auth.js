@@ -1,47 +1,28 @@
 const express = require('express');
-const router = express.Router();
 const passport = require('passport');
+const router = express.Router();
+const authController = require('../controllers/authController');
 
 router.get(
   '/google',
   passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ],
-    prompt: 'consent' 
+    scope: ['profile', 'email']
   })
 );
 
 router.get(
   '/google/callback',
-  (req, res, next) => {
-    console.log('REQ.originalUrl =', req.originalUrl);
-    console.log('REQ full URL   =', `${req.protocol}://${req.get('host')}${req.originalUrl}`);
-    next();
-  },
   passport.authenticate('google', {
-    failureRedirect: '/auth/failure',
-    session: true
+    session: false,
+    failureRedirect: '/auth/failure'
   }),
-  (req, res) => {
-    res.redirect('/api-docs');
-  }
+  authController.googleCallback
 );
 
 router.get('/failure', (req, res) => {
   res.status(401).json({ message: 'Google authentication failed' });
 });
 
-
-router.get('/logout', (req, res) => {
-  req.logout(err => {
-    if (err) return res.status(500).json({ message: 'Logout error', error: err });
-    req.session.destroy(() => {
-      res.clearCookie('connect.sid');
-      res.json({ message: 'Logged out' });
-    });
-  });
-});
+router.get('/logout', authController.logout);
 
 module.exports = router;

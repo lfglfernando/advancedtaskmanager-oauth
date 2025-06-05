@@ -7,8 +7,27 @@ const options = {
     info: {
       title: 'Task Manager API',
       version: '1.0.0',
+      description: 'Documentación de la API para tareas y categorías con autenticación JWT',
     },
-    servers: [{ url: 'https://your-app-name.onrender.com' }],
+    servers: [
+      {
+        url: 'https://advancedtaskmanager-oauth.onrender.com',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ['./routes/*.js'],
 };
@@ -18,7 +37,7 @@ const swaggerSpec = swaggerJsdoc(options);
 function swaggerDocs(app) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   app.get('/swagger.json', (req, res) => res.json(swaggerSpec));
-  console.log('Swagger docs available at /api-docs');
+  console.log('✅ Swagger docs available at /api-docs');
 }
 
 module.exports = swaggerDocs;

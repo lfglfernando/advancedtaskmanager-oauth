@@ -1,23 +1,26 @@
-// controllers/authController.js
-exports.loginSuccess = (req, res) => {
-    res.json({ message: 'Login successful', user: req.user });
+const jwt = require('jsonwebtoken');
+
+exports.googleCallback = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Authentication failed' });
+  }
+
+  const userPayload = {
+    id: req.user.id,
+    displayName: req.user.displayName,
+    email: req.user.email,
+    photo: req.user.photo
   };
 
-  exports.loginFailure = (req, res) => {
-    res.status(401).json({ error: 'Login failed' });
-  };
-  
-  exports.logout = (req, res) => {
-    req.logout(() => {
-      res.json({ message: 'Logged out' });
-    });
-  };
-  
-  exports.checkStatus = (req, res) => {
-    if (req.user) {
-      res.json({ loggedIn: true, user: req.user });
-    } else {
-      res.json({ loggedIn: false });
-    }
-  };
-  
+  const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
+    expiresIn: '24h'
+  });
+
+  res.redirect(`${process.env.CLIENT_URL}/?token=${token}`);
+};
+
+exports.logout = (req, res) => {
+  req.logout(() => {
+    res.json({ message: 'Logged out' });
+  });
+};

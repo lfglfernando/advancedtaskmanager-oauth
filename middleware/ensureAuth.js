@@ -1,9 +1,21 @@
+const jwt = require('jsonwebtoken');
+
 function ensureAuth(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.status(401).json({ error: 'Unauthorized' });
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'No token provided' });
   }
-  
-  module.exports = ensureAuth;
-  
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+}
+
+module.exports = ensureAuth;
