@@ -16,7 +16,11 @@ exports.googleCallback = (req, res) => {
     expiresIn: '24h'
   });
 
-  res.redirect(`https://advancedtaskmanager-oauth.onrender.com/success?token=${token}`);
+  res.json({
+    message: 'Google login successful',
+    token,
+    user: userPayload
+  });
 };
 
 exports.logout = (req, res) => {

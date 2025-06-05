@@ -11,6 +11,7 @@ const swaggerDocs = require('./swagger');
 const ensureAuth = require('./middleware/ensureAuth');
 
 const app = express();
+
 app.set('trust proxy', 1);
 
 app.use(cors({
@@ -22,17 +23,17 @@ app.use(cors({
 app.use(express.json());
 app.use(passport.initialize());
 
+// Rutas
 app.use('/auth', authRoutes);
 app.use('/api/tasks', ensureAuth, taskRoutes);
 app.use('/api/categories', ensureAuth, categoryRoutes);
+
+// Swagger docs
 swaggerDocs(app);
 
 const port = process.env.PORT || 3000;
+
 connectToServer(() => {
-  app.get('/success', (req, res) => {
-        res.send(`Token recibido: ${req.query.token}`);
-    });
-      
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
